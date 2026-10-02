@@ -34,6 +34,12 @@ A clinic appointment & queue management REST API built with Django and Django RE
 - [x] Scheduled reminders (Celery-beat)
   - nightly job (18:00 UTC) emails every patient with a *scheduled* appointment the next day
   - dedicated `beat` service in Docker compose; schedule defined in `CELERY_BEAT_SCHEDULE`
+- [x] Stripe payments (test mode)
+  - `POST /api/appointments/{id}/pay/` returns a Stripe Checkout URL for the booking fee
+  - `POST /api/stripe/webhook/` verifies the Stripe signature and marks the payment paid
+    on `checkout.session.completed`
+  - payment status embedded in the appointment response; double payment blocked
+  - set `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` env vars to enable (503 otherwise)
 
 ## Quick start (Docker)
 

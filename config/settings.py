@@ -201,6 +201,15 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 
+# Stripe (test mode)
+# Set STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET to enable payments.
+
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', '')
+BOOKING_FEE_CENTS = int(os.environ.get('BOOKING_FEE_CENTS', '2000'))
+SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
+
+
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 

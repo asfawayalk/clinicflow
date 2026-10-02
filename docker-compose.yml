@@ -30,6 +30,8 @@ services:
       POSTGRES_USER: clinicflow
       POSTGRES_PASSWORD: clinicflow
       CELERY_BROKER_URL: redis://redis:6379/0
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
     ports:
       - "8000:8000"
     volumes:

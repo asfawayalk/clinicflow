@@ -1,7 +1,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 
-from .models import Appointment, Doctor, Patient
+from .models import Appointment, Doctor, Patient, Payment
 
 
 class DoctorSerializer(serializers.ModelSerializer):
@@ -16,15 +16,22 @@ class PatientSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'created_at']
 
 
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ['amount_cents', 'currency', 'status', 'updated_at']
+
+
 class AppointmentSerializer(serializers.ModelSerializer):
     doctor_name = serializers.StringRelatedField(source='doctor', read_only=True)
     patient_name = serializers.StringRelatedField(source='patient', read_only=True)
+    payment = PaymentSerializer(read_only=True)
 
     class Meta:
         model = Appointment
         fields = [
             'id', 'doctor', 'doctor_name', 'patient', 'patient_name',
-            'scheduled_at', 'status', 'reason', 'created_at', 'updated_at',
+            'scheduled_at', 'status', 'reason', 'payment', 'created_at', 'updated_at',
         ]
 
     def validate_scheduled_at(self, value):

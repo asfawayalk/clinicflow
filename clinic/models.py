@@ -84,3 +84,22 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f'{self.patient} with {self.doctor} at {self.scheduled_at:%Y-%m-%d %H:%M}'
+
+
+class Payment(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        PAID = 'paid', 'Paid'
+
+    appointment = models.OneToOneField(
+        Appointment, on_delete=models.CASCADE, related_name='payment'
+    )
+    amount_cents = models.PositiveIntegerField()
+    currency = models.CharField(max_length=3, default='usd')
+    stripe_session_id = models.CharField(max_length=255, blank=True)
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.amount_cents / 100:.2f} {self.currency.upper()} for appointment {self.appointment_id} ({self.status})'

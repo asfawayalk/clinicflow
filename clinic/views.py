@@ -1,10 +1,14 @@
+from django.conf import settings
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
-from rest_framework import viewsets
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.response import Response
 
 from accounts.models import Profile
 
-from .models import Appointment, Doctor, Patient
+from .models import Appointment, Doctor, Patient, Payment
+from .payments import create_checkout_session
 from .permissions import IsReceptionist, IsReceptionistOrReadOnly, get_role
 from .serializers import AppointmentSerializer, DoctorSerializer, PatientSerializer
 
@@ -88,3 +92,25 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         elif role == Profile.Role.DOCTOR:
             raise PermissionDenied('Doctors cannot book appointments.')
         serializer.save()
+
+    @extend_schema(
+        request=None,
+        responses={200: {'type': 'object', 'properties': {'checkout_url': {'type': 'string'}}}},
+        description='Create a Stripe Checkout session for this appointment\'s booking fee.',
+    )
+    @action(detail=True, methods=['post'])
+    def pay(self, request, pk=None):
+        appointment = self.get_object()
+        if not settings.STRIPE_SECRET_KEY:
+            return Response(
+                {'detail': 'Payments are not configured on this server.'},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+        existing = getattr(appointment, 'payment', None)
+        if existing and existing.status == Payment.Status.PAID:
+            return Response(
+                {'detail': 'This appointment is already paid.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        payment, session = create_checkout_session(appointment)
+        return Response({'checkout_url': session.url})
