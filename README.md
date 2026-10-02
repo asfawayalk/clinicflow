@@ -22,6 +22,11 @@ A clinic appointment & queue management REST API built with Django and Django RE
   - `POST /api/auth/token/` and `/api/auth/token/refresh/` — obtain / refresh tokens
   - `GET /api/auth/me/` — current user profile
   - all clinic endpoints require authentication; API docs stay public
+- [x] Role-based permissions (patient / receptionist / doctor)
+  - self-registration creates a **patient** account with a linked patient record
+  - patients see only their own record and appointments, and can book only for themselves
+  - doctors see only appointments assigned to them
+  - receptionists (and staff) manage everything; staff assign roles via Django admin
 
 ## Quick start (Docker)
 
