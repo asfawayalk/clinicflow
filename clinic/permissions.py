@@ -15,6 +15,8 @@ class IsReceptionist(BasePermission):
     """Full access for receptionists (and staff) only."""
 
     def has_permission(self, request, view):
+        if not (request.user and request.user.is_authenticated):
+            return False
         return get_role(request.user) == Profile.Role.RECEPTIONIST
 
 
@@ -22,6 +24,8 @@ class IsReceptionistOrReadOnly(BasePermission):
     """Anyone authenticated may read; only receptionists may write."""
 
     def has_permission(self, request, view):
+        if not (request.user and request.user.is_authenticated):
+            return False
         if request.method in SAFE_METHODS:
             return True
         return get_role(request.user) == Profile.Role.RECEPTIONIST

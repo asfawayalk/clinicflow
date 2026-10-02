@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Django system checks
+        run: python manage.py check
+
+      - name: Validate OpenAPI schema
+        run: python manage.py spectacular --validate --file /dev/null
+
+      - name: Run tests
+        run: pytest -v

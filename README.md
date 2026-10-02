@@ -1,5 +1,7 @@
 # ClinicFlow
 
+[![CI](https://github.com/asfawayalk/clinicflow/actions/workflows/ci.yml/badge.svg)](https://github.com/asfawayalk/clinicflow/actions/workflows/ci.yml)
+
 A clinic appointment & queue management REST API built with Django and Django REST Framework.
 
 > Portfolio project — built feature by feature, each in its own commit.
@@ -49,6 +51,11 @@ A clinic appointment & queue management REST API built with Django and Django RE
   - idempotent; creates demo logins for every role (password `demo-pass-123`):
     `admin` (Django admin), `receptionist`, `dr.jane`, `patient`
   - seeds today's queue (visible live at `/queue/`) and tomorrow's bookings
+- [x] Tests + CI (pytest, GitHub Actions)
+  - 26 tests: auth flow, role permission matrix, booking validation, Stripe checkout
+    & signature-verified webhook, reminder task, and the live WebSocket queue
+  - CI also runs Django system checks and validates the OpenAPI schema
+  - run locally: `pip install -r requirements-dev.txt && pytest`
 
 ## Quick start (Docker)
 
