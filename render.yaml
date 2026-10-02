@@ -1,0 +1,22 @@
+# Render blueprint: free-tier deployment of ClinicFlow.
+# Web service only — Celery runs eagerly and the channel layer is in-memory,
+# which behaves identically on a single instance. Postgres comes from Neon
+# via the DATABASE_URL env var (set it in the Render dashboard after creating
+# a free database at https://neon.tech).
+
+services:
+  - type: web
+    name: clinicflow
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input
+    startCommand: python manage.py migrate && python manage.py seed_demo && daphne -b 0.0.0.0 -p $PORT config.asgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.14.5
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: '0'
+      - key: DATABASE_URL
+        sync: false  # paste your Neon connection string in the dashboard

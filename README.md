@@ -107,6 +107,20 @@ export STRIPE_SECRET_KEY=sk_test_...
 export STRIPE_WEBHOOK_SECRET=whsec_...   # from: stripe listen --forward-to localhost:8000/api/stripe/webhook/
 ```
 
+## Deployment (Render + Neon, free tier)
+
+The repo ships with a `render.yaml` blueprint. The free deployment runs a single web
+service (Daphne): Celery executes eagerly and the channel layer is in-memory, which
+behaves identically on one instance — the full worker/beat/Redis topology is
+demonstrated by `docker-compose.yml`.
+
+1. Create a free Postgres database at [neon.tech](https://neon.tech) and copy its connection string.
+2. On [render.com](https://render.com): **New → Blueprint**, pick this repo.
+3. When prompted, paste the Neon connection string as `DATABASE_URL`.
+
+The start command migrates, seeds demo data, and serves with Daphne. Note: the free
+instance sleeps when idle — the first request after a pause takes ~30–60 s.
+
 ## Stack
 
 Python 3.14 · Django 6 · Django REST Framework · Django Channels (Daphne) ·
