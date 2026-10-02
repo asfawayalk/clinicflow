@@ -14,8 +14,19 @@ A clinic appointment & queue management REST API built with Django and Django RE
   - Swagger UI at `/api/docs/`
   - ReDoc at `/api/redoc/`
   - raw schema at `/api/schema/`
+- [x] Dockerized: `docker compose up` runs the API + PostgreSQL
+  - environment-driven settings (secret key, debug, hosts, database)
+  - Postgres with healthcheck; automatic migrations on startup
 
-## Quick start
+## Quick start (Docker)
+
+```bash
+docker compose up --build
+```
+
+API is browsable at http://127.0.0.1:8000/api/ — interactive docs at http://127.0.0.1:8000/api/docs/
+
+## Quick start (local, SQLite)
 
 ```bash
 python -m venv .venv
@@ -24,8 +35,6 @@ python -m venv .venv
 .venv/bin/python manage.py runserver
 ```
 
-API is browsable at http://127.0.0.1:8000/api/ — interactive docs at http://127.0.0.1:8000/api/docs/
-
 ## Stack
 
-Python 3.14 · Django 6 · Django REST Framework
+Python 3.14 · Django 6 · Django REST Framework · PostgreSQL 17 · Docker
