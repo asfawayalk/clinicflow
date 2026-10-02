@@ -27,6 +27,10 @@ A clinic appointment & queue management REST API built with Django and Django RE
   - patients see only their own record and appointments, and can book only for themselves
   - doctors see only appointments assigned to them
   - receptionists (and staff) manage everything; staff assign roles via Django admin
+- [x] Async confirmation emails (Celery + Redis)
+  - booking an appointment queues a confirmation email via a `post_save` signal (`transaction.on_commit`)
+  - dedicated `worker` service in Docker compose; Redis as the message broker
+  - without a broker configured (plain local dev), tasks run eagerly in-process
 
 ## Quick start (Docker)
 
@@ -47,4 +51,4 @@ python -m venv .venv
 
 ## Stack
 
-Python 3.14 · Django 6 · Django REST Framework · PostgreSQL 17 · Docker
+Python 3.14 · Django 6 · Django REST Framework · PostgreSQL 17 · Celery · Redis · Docker

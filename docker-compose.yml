@@ -13,20 +13,43 @@ services:
       timeout: 3s
       retries: 10
 
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
   web:
     build: .
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    environment:
+    environment: &app_env
       POSTGRES_HOST: db
       POSTGRES_DB: clinicflow
       POSTGRES_USER: clinicflow
       POSTGRES_PASSWORD: clinicflow
+      CELERY_BROKER_URL: redis://redis:6379/0
     ports:
       - "8000:8000"
     volumes:
       - .:/app
     depends_on:
       db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build: .
+    command: celery -A config worker --loglevel=info
+    environment: *app_env
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
 volumes:

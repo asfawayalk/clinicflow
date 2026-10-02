@@ -182,6 +182,15 @@ SPECTACULAR_SETTINGS = {
 }
 
 
+# Celery
+# https://docs.celeryq.dev/en/stable/userguide/configuration.html
+# Without a broker configured (e.g. plain local dev), tasks run eagerly in-process.
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', '')
+CELERY_TASK_ALWAYS_EAGER = not CELERY_BROKER_URL
+CELERY_TASK_SERIALIZER = 'json'
+
+
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
@@ -190,3 +199,5 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+DEFAULT_FROM_EMAIL = 'noreply@clinicflow.example'
