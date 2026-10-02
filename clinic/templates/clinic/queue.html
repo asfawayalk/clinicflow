@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Waiting Room</title>
+  <style>
+    :root {
+      --bg: #f6f8fa; --card: #ffffff; --text: #1f2328; --muted: #656d76;
+      --scheduled: #9a6700; --checked_in: #1a7f37; --completed: #656d76;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0d1117; --card: #161b22; --text: #e6edf3; --muted: #8b949e; }
+    }
+    body { margin: 0; padding: 24px 16px; background: var(--bg); color: var(--text);
+           font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
+    h1 { font-size: 1.4rem; margin: 0 auto 4px; max-width: 640px; }
+    p.sub { margin: 0 auto 20px; max-width: 640px; color: var(--muted); font-size: .9rem; }
+    #status { font-weight: 600; }
+    ul { list-style: none; margin: 0 auto; padding: 0; max-width: 640px; }
+    li { background: var(--card); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+         display: flex; justify-content: space-between; align-items: center; gap: 12px;
+         box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    li .who { font-weight: 600; }
+    li .when { color: var(--muted); font-size: .85rem; }
+    .badge { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+    .badge.scheduled { color: var(--scheduled); }
+    .badge.checked_in { color: var(--checked_in); }
+    .badge.completed { color: var(--completed); }
+    #empty { text-align: center; color: var(--muted); padding: 40px 0; }
+  </style>
+</head>
+<body>
+  <h1>Waiting Room — today's queue</h1>
+  <p class="sub">Live via WebSocket: <span id="status">connecting…</span></p>
+  <ul id="queue"></ul>
+  <div id="empty" hidden>No appointments today.</div>
+
+  <script>
+    const items = new Map();
+
+    function render() {
+      const ul = document.getElementById('queue');
+      ul.innerHTML = '';
+      const visible = [...items.values()]
+        .filter(a => a.status !== 'cancelled')
+        .sort((a, b) => a.scheduled_at.localeCompare(b.scheduled_at));
+      document.getElementById('empty').hidden = visible.length > 0;
+      for (const a of visible) {
+        const li = document.createElement('li');
+        const time = new Date(a.scheduled_at)
+          .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        li.innerHTML = `
+          <div>
+            <div class="who"></div>
+            <div class="when">${time} · <span class="doc"></span></div>
+          </div>
+          <span class="badge ${a.status}">${a.status.replace('_', ' ')}</span>`;
+        li.querySelector('.who').textContent = a.patient;
+        li.querySelector('.doc').textContent = a.doctor;
+        ul.appendChild(li);
+      }
+    }
+
+    function connect() {
+      const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+      const ws = new WebSocket(`${proto}://${location.host}/ws/queue/`);
+      const status = document.getElementById('status');
+      ws.onopen = () => { status.textContent = 'connected'; };
+      ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        if (msg.type === 'queue.snapshot') {
+          items.clear();
+          for (const a of msg.appointments) items.set(a.id, a);
+        } else if (msg.type === 'queue.update') {
+          items.set(msg.appointment.id, msg.appointment);
+        }
+        render();
+      };
+      ws.onclose = () => {
+        status.textContent = 'disconnected — retrying…';
+        setTimeout(connect, 2000);
+      };
+    }
+    connect();
+  </script>
+</body>
+</html>

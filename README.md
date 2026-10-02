@@ -40,6 +40,11 @@ A clinic appointment & queue management REST API built with Django and Django RE
     on `checkout.session.completed`
   - payment status embedded in the appointment response; double payment blocked
   - set `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` env vars to enable (503 otherwise)
+- [x] Live waiting-room queue (Django Channels + WebSockets)
+  - open http://localhost:8000/queue/ — today's queue updates in real time
+  - `ws/queue/` sends a snapshot on connect, then pushes every booking / check-in / status change
+  - broadcast from a `post_save` signal through the channel layer (Redis in Docker,
+    in-memory for plain local dev); served by Daphne (ASGI)
 
 ## Quick start (Docker)
 
@@ -60,4 +65,4 @@ python -m venv .venv
 
 ## Stack
 
-Python 3.14 · Django 6 · Django REST Framework · PostgreSQL 17 · Celery · Redis · Docker
+Python 3.14 · Django 6 · Django REST Framework · Django Channels · PostgreSQL 17 · Celery · Redis · Docker
