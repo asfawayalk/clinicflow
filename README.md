@@ -45,14 +45,19 @@ A clinic appointment & queue management REST API built with Django and Django RE
   - `ws/queue/` sends a snapshot on connect, then pushes every booking / check-in / status change
   - broadcast from a `post_save` signal through the channel layer (Redis in Docker,
     in-memory for plain local dev); served by Daphne (ASGI)
+- [x] Demo data in one command: `python manage.py seed_demo`
+  - idempotent; creates demo logins for every role (password `demo-pass-123`):
+    `admin` (Django admin), `receptionist`, `dr.jane`, `patient`
+  - seeds today's queue (visible live at `/queue/`) and tomorrow's bookings
 
 ## Quick start (Docker)
 
 ```bash
 docker compose up --build
+docker compose exec web python manage.py seed_demo   # optional demo data
 ```
 
-API is browsable at http://127.0.0.1:8000/api/ — interactive docs at http://127.0.0.1:8000/api/docs/
+API is browsable at http://127.0.0.1:8000/api/ — interactive docs at http://127.0.0.1:8000/api/docs/ — live queue at http://127.0.0.1:8000/queue/
 
 ## Quick start (local, SQLite)
 
