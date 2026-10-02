@@ -17,6 +17,11 @@ A clinic appointment & queue management REST API built with Django and Django RE
 - [x] Dockerized: `docker compose up` runs the API + PostgreSQL
   - environment-driven settings (secret key, debug, hosts, database)
   - Postgres with healthcheck; automatic migrations on startup
+- [x] JWT authentication (simple-jwt)
+  - `POST /api/auth/register/` — sign up (with password strength validation)
+  - `POST /api/auth/token/` and `/api/auth/token/refresh/` — obtain / refresh tokens
+  - `GET /api/auth/me/` — current user profile
+  - all clinic endpoints require authentication; API docs stay public
 
 ## Quick start (Docker)
 
