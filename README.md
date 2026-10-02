@@ -31,6 +31,9 @@ A clinic appointment & queue management REST API built with Django and Django RE
   - booking an appointment queues a confirmation email via a `post_save` signal (`transaction.on_commit`)
   - dedicated `worker` service in Docker compose; Redis as the message broker
   - without a broker configured (plain local dev), tasks run eagerly in-process
+- [x] Scheduled reminders (Celery-beat)
+  - nightly job (18:00 UTC) emails every patient with a *scheduled* appointment the next day
+  - dedicated `beat` service in Docker compose; schedule defined in `CELERY_BEAT_SCHEDULE`
 
 ## Quick start (Docker)
 

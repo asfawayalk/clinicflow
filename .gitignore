@@ -16,3 +16,6 @@ media/
 .vscode/
 .idea/
 .DS_Store
+
+# Celery
+celerybeat-schedule*

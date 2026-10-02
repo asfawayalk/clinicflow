@@ -14,6 +14,8 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -189,6 +191,14 @@ SPECTACULAR_SETTINGS = {
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', '')
 CELERY_TASK_ALWAYS_EAGER = not CELERY_BROKER_URL
 CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULE = {
+    'send-appointment-reminders': {
+        'task': 'clinic.tasks.send_appointment_reminders',
+        # Every day at 18:00 UTC, remind patients about tomorrow's appointments.
+        'schedule': crontab(hour=18, minute=0),
+    },
+}
 
 
 # Email
