@@ -10,6 +10,10 @@ A clinic appointment & queue management REST API built with Django and Django RE
   - no double-booking a doctor for the same time slot
   - appointments must be in the future
   - filter appointments by `?status=` and `?doctor=`
+- [x] Auto-generated OpenAPI 3 docs (drf-spectacular)
+  - Swagger UI at `/api/docs/`
+  - ReDoc at `/api/redoc/`
+  - raw schema at `/api/schema/`
 
 ## Quick start
 
@@ -20,7 +24,7 @@ python -m venv .venv
 .venv/bin/python manage.py runserver
 ```
 
-API is browsable at http://127.0.0.1:8000/api/
+API is browsable at http://127.0.0.1:8000/api/ — interactive docs at http://127.0.0.1:8000/api/docs/
 
 ## Stack
 
