@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ClinicFlow</title>
+  <style>
+    :root { --bg: #f6f8fa; --card: #ffffff; --text: #1f2328; --muted: #656d76; --accent: #0969da; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0d1117; --card: #161b22; --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff; }
+    }
+    body { margin: 0; padding: 48px 16px; background: var(--bg); color: var(--text);
+           font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 640px; margin: 0 auto; }
+    h1 { margin: 0 0 8px; }
+    p.lead { color: var(--muted); margin: 0 0 32px; }
+    a.card { display: block; background: var(--card); border-radius: 10px; padding: 18px 20px;
+             margin-bottom: 12px; text-decoration: none; color: inherit;
+             box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    a.card:hover { outline: 2px solid var(--accent); }
+    a.card strong { color: var(--accent); }
+    a.card span { display: block; color: var(--muted); font-size: .9rem; margin-top: 4px; }
+    footer { margin-top: 32px; color: var(--muted); font-size: .85rem; }
+    code { background: var(--card); padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>ClinicFlow</h1>
+    <p class="lead">Clinic appointment &amp; queue management API — Django · DRF · Channels · Celery · Stripe</p>
+
+    <a class="card" href="/api/docs/">
+      <strong>API documentation (Swagger UI)</strong>
+      <span>Browse and try every endpoint. Register, grab a JWT, and book an appointment.</span>
+    </a>
+    <a class="card" href="/queue/">
+      <strong>Live waiting room</strong>
+      <span>Today's queue over WebSockets — book or check in an appointment and watch it update.</span>
+    </a>
+    <a class="card" href="/admin/">
+      <strong>Django admin</strong>
+      <span>Manage doctors, patients, appointments, payments, and user roles.</span>
+    </a>
+
+    <footer>
+      Demo data: <code>python manage.py seed_demo</code> — logins <code>receptionist</code>,
+      <code>dr.jane</code>, <code>patient</code> (password <code>demo-pass-123</code>).
+    </footer>
+  </main>
+</body>
+</html>
