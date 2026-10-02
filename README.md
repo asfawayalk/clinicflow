@@ -2,6 +2,9 @@
 
 [![CI](https://github.com/asfawayalk/clinicflow/actions/workflows/ci.yml/badge.svg)](https://github.com/asfawayalk/clinicflow/actions/workflows/ci.yml)
 
+**Live demo:** [clinicflow-c1ew.onrender.com](https://clinicflow-c1ew.onrender.com/) — free
+tier, so the first visit after idle takes ~30–60 s to wake. Demo logins below.
+
 **A clinic appointment & queue management API** — built as a compact, production-patterned
 showcase of the Django backend stack: REST APIs, JWT auth with roles, async tasks,
 scheduled jobs, WebSockets, and Stripe payments, all Dockerized and tested in CI.
@@ -19,12 +22,12 @@ docker compose up --build
 docker compose exec web python manage.py seed_demo
 ```
 
-| Page | URL |
-|---|---|
-| Landing page | http://localhost:8000/ |
-| Swagger UI (interactive API docs) | http://localhost:8000/api/docs/ |
-| Live waiting room (WebSockets) | http://localhost:8000/queue/ |
-| Django admin | http://localhost:8000/admin/ |
+| Page | Local | Live |
+|---|---|---|
+| Landing page | http://localhost:8000/ | [live](https://clinicflow-c1ew.onrender.com/) |
+| Swagger UI (interactive API docs) | http://localhost:8000/api/docs/ | [live](https://clinicflow-c1ew.onrender.com/api/docs/) |
+| Live waiting room (WebSockets) | http://localhost:8000/queue/ | [live](https://clinicflow-c1ew.onrender.com/queue/) |
+| Django admin | http://localhost:8000/admin/ | [live](https://clinicflow-c1ew.onrender.com/admin/) |
 
 Demo logins (password `demo-pass-123` for all): `admin` · `receptionist` · `dr.jane` · `patient`
 
